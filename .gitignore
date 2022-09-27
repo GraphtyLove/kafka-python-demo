@@ -6,3 +6,4 @@
 *.pyd
 *.so
 .venv
+.idea

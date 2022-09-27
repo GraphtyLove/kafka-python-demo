@@ -3,9 +3,9 @@ from json import loads, dumps
 from time import sleep
 
 categories_mapper = {
-    "Fruit": "apple, banana, orange, pear, kiwi",
-    "Bakery": "bread, croissant, baguette, cake",
-    "Drink": "water, soda, beer, wine"
+    "Fruit": ["apple", "banana", "orange", "pear", "kiwi"],
+    "Bakery": ["bread", "croissant", "baguette", "cake"],
+    "Drink": ["water", "soda", "beer", "wine"],
 }
 
 # Initiate Consumer with Kafka
@@ -30,13 +30,14 @@ for message in consumer:
         # Lower the product name to fit the categories_mapper
         product_name = product["name"].lower()
         # If the product is in the categories_mapper, add the corresponding category
-        if product_name in categories_mapper.keys():
-            product["category"] = categories_mapper.get(product_name)
+        for category, values in categories_mapper.items():
+            if product_name in values:
+                product["category"] = category
         # If not, add it to the "Other" category
         else:
             product["category"] = "Other"
         # Compute the total price
-        total_price  += product["price"]
+        total_price += product["price"]
     
     print("Processed data: ", message_data)
     # Read the DB
